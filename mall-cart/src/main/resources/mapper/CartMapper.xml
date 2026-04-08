@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kakarot.mall.cart.mapper.CartMapper">
+
+    <resultMap id="cartItemMap" type="com.kakarot.mall.cart.vo.CartItemVO">
+        <id property="id" column="id"/>
+        <result property="productId" column="product_id"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="mainImage" column="main_image"/>
+        <result property="skuName" column="sku_name"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="quantity" column="quantity"/>
+        <result property="checked" column="checked"/>
+        <result property="availableStock" column="available_stock"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="skuStatus" column="sku_status"/>
+    </resultMap>
+
+    <resultMap id="settlementItemMap" type="com.kakarot.mall.cart.vo.SettlementItemVO">
+        <result property="skuId" column="sku_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="skuName" column="sku_name"/>
+        <result property="mainImage" column="main_image"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="quantity" column="quantity"/>
+        <result property="lineTotal" column="line_total"/>
+    </resultMap>
+
+    <select id="selectByUserIdAndSkuId" resultType="com.kakarot.mall.cart.entity.Cart">
+        SELECT id, user_id, product_id, sku_id, quantity, checked, create_time, update_time
+        FROM mall_cart
+        WHERE user_id = #{userId} AND sku_id = #{skuId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mall_cart (user_id, product_id, sku_id, quantity, checked, create_time, update_time)
+        VALUES (#{userId}, #{productId}, #{skuId}, #{quantity}, 1, NOW(), NOW())
+    </insert>
+
+    <update id="updateQuantityIncrement">
+        UPDATE mall_cart
+        SET quantity = quantity + #{quantity}, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateQuantity">
+        UPDATE mall_cart
+        SET quantity = #{quantity}, update_time = NOW()
+        WHERE id = #{id} AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteByIdAndUserId">
+        DELETE FROM mall_cart
+        WHERE id = #{id} AND user_id = #{userId}
+    </delete>
+
+    <update id="updateChecked">
+        UPDATE mall_cart
+        SET checked = #{checked}, update_time = NOW()
+        WHERE id = #{id} AND user_id = #{userId}
+    </update>
+
+    <select id="selectCartListByUserId" resultMap="cartItemMap">
+        SELECT c.id,
+               c.product_id,
+               c.sku_id,
+               p.product_name,
+               p.main_image,
+               s.sku_name,
+               s.sale_price,
+               c.quantity,
+               c.checked,
+               (s.stock - s.lock_stock) AS available_stock,
+               p.status AS product_status,
+               s.status AS sku_status
+        FROM mall_cart c
+                 INNER JOIN mall_product p ON c.product_id = p.id
+                 INNER JOIN mall_product_sku s ON c.sku_id = s.id
+        WHERE c.user_id = #{userId}
+        ORDER BY c.update_time DESC
+    </select>
+
+    <select id="selectCheckedItemsByUserId" resultMap="settlementItemMap">
+        SELECT c.sku_id,
+               c.product_id,
+               p.product_name,
+               s.sku_name,
+               p.main_image,
+               s.sale_price,
+               c.quantity,
+               (s.sale_price * c.quantity) AS line_total
+        FROM mall_cart c
+                 INNER JOIN mall_product p ON c.product_id = p.id
+                 INNER JOIN mall_product_sku s ON c.sku_id = s.id
+        WHERE c.user_id = #{userId}
+          AND c.checked = 1
+          AND p.status = 1
+          AND s.status = 1
+        ORDER BY c.update_time DESC
+    </select>
+
+</mapper>

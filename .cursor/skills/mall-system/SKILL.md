@@ -113,3 +113,6 @@ When implementing a feature:
 3. **Include all imports** — do not skip any import statement.
 4. **No scope creep** — do not invent requirements beyond what was asked.
 5. **Minimal changes** — keep modifications module-scoped; do not refactor unrelated code.
+
+The SQL file under sql/init.sql is the source of truth for database schema.
+All entities, mapper XML, and SQL must follow that schema exactly.

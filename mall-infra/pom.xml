@@ -22,6 +22,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!-- 数据库 / 持久层 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

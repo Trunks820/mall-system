@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kakarot.mall.product.mapper.ProductSkuMapper">
+
+    <select id="selectByProductId" resultType="com.kakarot.mall.product.vo.SkuVO">
+        SELECT id,
+               sku_code AS skuCode,
+               sku_name AS skuName,
+               sale_price AS salePrice,
+               origin_price AS originPrice,
+               (stock - lock_stock) AS availableStock
+        FROM mall_product_sku
+        WHERE product_id = #{productId} AND status = 1
+        ORDER BY sale_price ASC
+    </select>
+
+</mapper>
