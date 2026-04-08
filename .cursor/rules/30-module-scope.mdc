@@ -1,0 +1,30 @@
+---
+description: 
+alwaysApply: false
+---
+
+---
+description: Module scoped implementation guide for mall-system business modules
+alwaysApply: false
+---
+
+# Module Scope
+
+When working on a module, only touch the current module and required shared modules.
+
+## Allowed cross-module dependency
+- business modules can depend on `mall-common` and `mall-infra`
+- `mall-app` can depend on all business modules
+
+## Disallowed behavior
+- Do not put user logic into order module
+- Do not put cart logic into product module
+- Do not put MQ consumer logic into order module
+- Do not bypass shared enums / exceptions / result wrappers
+
+## Output expectations
+Always provide:
+- file paths
+- complete imports
+- mapper + xml if persistence is required
+- explanation of why files are placed in the current module

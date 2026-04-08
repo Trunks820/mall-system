@@ -1,0 +1,46 @@
+---
+alwaysApply: true
+---
+
+---
+description: Architecture and module boundaries for mall-system
+alwaysApply: true
+---
+
+# Architecture
+
+## Parent / App
+- `mall-system` is the parent aggregator project.
+- `mall-app` contains only:
+  - boot application
+  - app-level configuration
+  - dependency aggregation
+
+## Shared Modules
+- `mall-common`:
+  - Result
+  - ResultCode
+  - BizException
+  - GlobalExceptionHandler
+  - enums
+  - shared constants
+- `mall-infra`:
+  - jwt
+  - redis
+  - mybatis config
+  - interceptor
+  - user context
+  - generic infra configs
+
+## Business Modules
+- `mall-user`: auth, current user, address
+- `mall-product`: category, product, sku, search
+- `mall-cart`: add/list/update/delete/check cart
+- `mall-order`: submit/list/detail/cancel/status
+- `mall-pay`: create pay/callback/result
+- `mall-mq`: timeout close / async post-payment consumers
+
+## Layering
+- controller -> service -> mapper
+- no business logic in controller
+- no transaction in controller

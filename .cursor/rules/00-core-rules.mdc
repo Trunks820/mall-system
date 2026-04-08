@@ -1,0 +1,26 @@
+---
+alwaysApply: true
+---
+
+---
+description: Core hard rules for the mall-system project
+alwaysApply: true
+---
+
+# Core Hard Rules
+
+- This project uses Spring Boot multi-module architecture.
+- Do not introduce Spring Cloud.
+- Do not add extra modules beyond current mall-system structure.
+- `mall-app` is the only boot application module.
+- Do not move business code into `mall-app`.
+- Use Java 17.
+- Use MyBatis XML for persistence where needed.
+- Use BigDecimal for all money fields and calculations.
+- Never use float or double for amount logic.
+- Use enums for order status, payment status, stock biz type, and order operation type.
+- Do not hardcode status strings in business logic.
+- Payment callback must be idempotent.
+- Stock updates must use conditional update SQL and check affected rows.
+- Do not trust frontend price or payment amount.
+- Keep implementation within the requested module scope.

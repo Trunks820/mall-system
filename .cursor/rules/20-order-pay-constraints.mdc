@@ -1,0 +1,59 @@
+---
+alwaysApply: true
+---
+
+---
+description: Strict constraints for order, payment, and inventory flows
+alwaysApply: true
+---
+
+# Order / Payment / Inventory Constraints
+
+## Order status
+Only use:
+- NEW
+- PAID
+- SHIPPED
+- FINISHED
+- CANCELLED
+- CLOSED
+
+## Payment status
+Only use:
+- UNPAID
+- PAID
+- FAIL
+
+## Order flow
+Allowed transitions:
+- NEW -> PAID / CANCELLED / CLOSED
+- PAID -> SHIPPED
+- SHIPPED -> FINISHED
+
+## Submit order
+Must include:
+- validate address
+- validate selected cart items
+- validate product and sku status
+- re-calculate amount from DB
+- lock stock with conditional update
+- create order
+- create order items
+- write stock log
+- write order operation log
+- remove participated cart items
+- send timeout MQ after transaction commit
+
+## Payment callback
+Must include:
+- signature validation placeholder if actual SDK not yet integrated
+- idempotent processing
+- update payment record
+- update order status
+- confirm stock deduction
+- write logs
+- send async message after transaction commit
+
+## Inventory
+Use conditional SQL updates.
+If affected rows == 0, throw exception and rollback.
