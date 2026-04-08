@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kakarot.mall.user.mapper.UserMapper">
+
+    <select id="selectById" resultType="com.kakarot.mall.user.entity.User">
+        SELECT id, open_id, union_id, nick_name, avatar_url, phone, status, create_time, update_time
+        FROM mall_user
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByOpenId" resultType="com.kakarot.mall.user.entity.User">
+        SELECT id, open_id, union_id, nick_name, avatar_url, phone, status, create_time, update_time
+        FROM mall_user
+        WHERE open_id = #{openId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mall_user (open_id, union_id, nick_name, avatar_url, phone, status)
+        VALUES (#{openId}, #{unionId}, #{nickName}, #{avatarUrl}, #{phone}, #{status})
+    </insert>
+
+</mapper>
